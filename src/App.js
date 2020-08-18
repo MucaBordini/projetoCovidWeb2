@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
+
+  const [casos , setCasos] = useState([]);
+
+  async function buscar () {
+    const res = await axios.get(
+      'https://covid19-brazil-api.now.sh/api/report/v1'
+    );
+    setCasos(res.data);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={() => buscar()}>Carregar casos covid</button>
+      <ul>
+        {casos.map((caso, index) => {
+          return <li key={index}>{caso.uf} {caso.cases}</li>;
+        })}
+      </ul>
     </div>
   );
 }
